@@ -96,10 +96,10 @@ jobs:
 
       - name: test wheels
         run: |
+          pip install pytest
           for whl in dist/*whl; do 
-              pip install ${whl}
+              pip install ${whl} --force-reinstall
               pytest pyresample/tests/
-              pip uninstall pyresample
           done
 
       - name: Upload wheel(s) as build artifacts
