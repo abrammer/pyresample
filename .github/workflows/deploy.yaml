@@ -28,19 +28,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [windows-latest, macos-latest]
-        python-version: [3.6, 3.7, 3.8, 3.9]
-        include:
-          # Using pythons inside a docker image to provide all the Linux
-          # python-versions permutations.
-          - name: manylinux 64-bit
-            os: ubuntu-latest
-            python-version: 3.8
-            docker-image: manylinux1_x86_64
-          - name: manylinux 32-bit
-            os: ubuntu-latest
-            python-version: 3.8
-            docker-image: manylinux1_i686
+        os: [macos-latest]
+        python-version: [3.8]
 
     steps:
       - uses: actions/checkout@v2
@@ -105,6 +94,13 @@ jobs:
           git+https://github.com/pydata/xarray;
 
 
+      - name: test wheels
+        run: |
+          for whl in dist/*whl; do 
+              pip install ${whl}
+              pytest pyresample/tests/
+              pip uninstall pyresample
+          done
 
       - name: Upload wheel(s) as build artifacts
         uses: actions/upload-artifact@v2
