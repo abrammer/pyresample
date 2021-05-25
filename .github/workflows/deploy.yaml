@@ -99,10 +99,11 @@ jobs:
           pwd
           echo ${HOME}
           echo ${{ github.workspace }}
+          ls
           pip install pytest
           for whl in dist/*whl; do 
               pip install ${whl} --force-reinstall --no-deps
-              pytest test/
+              pytest pyresample/test/
           done
 
       - name: Upload wheel(s) as build artifacts
