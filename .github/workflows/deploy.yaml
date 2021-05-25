@@ -43,12 +43,6 @@ jobs:
             docker-image: manylinux1_i686
 
     steps:
-      - name: test wheels
-        if:  matrix.docker-image != 'manylinux1_i686'
-        shell: bash -l {0} 
-        run: |
-            echo "this ran on this strategy"
-
       - uses: actions/checkout@v2
       - run: |
           git fetch --prune --unshallow
@@ -77,29 +71,12 @@ jobs:
             quay.io/pypa/${{ matrix.docker-image }} \
             /io/continuous_integration/build-manylinux-wheels.sh
 
-      - name: Setup Conda Environment
-        uses: conda-incubator/setup-miniconda@v2
-        with:
-          miniconda-version: "latest"
-          python-version: ${{ matrix.python-version }}
-          mamba-version: "*"
-          channels: conda-forge,defaults
-          environment-file: continuous_integration/environment.yaml
-          activate-environment: test-environment
-
-      # had to do this to test the wheel and not the local code, probably a better way
-      - name: make tempdir for tests
-        run: |
-             mkdir ./temp
-             mv pyresample/test ./temp/
-             mv pyresample dont_use_this
-
-      - name: test wheels
+      - name: test wheel version
         if:  matrix.docker-image != 'manylinux1_i686'
         shell: bash -l {0} 
         run: |
           pip install --force-reinstall --no-deps --no-index --find-links=./dist/ pyresample
-          pytest temp/test/ 
+          python -c "import pyresample; print(pyresample.__file__, pyresample.__version__)"
 
       - name: Upload wheel(s) as build artifacts
         uses: actions/upload-artifact@v2
