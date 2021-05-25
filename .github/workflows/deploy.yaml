@@ -2,11 +2,11 @@ name: Deploy sdist and wheels
 
 on:
   push:
-    tags:
-      - v*
-  release:
-    types:
-      - published
+#    tags:
+#      - v*
+#  release:
+#    types:
+#      - published
 
 jobs:
   build_sdist:
