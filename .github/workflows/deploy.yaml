@@ -98,7 +98,7 @@ jobs:
         run: |
           pwd
           echo ${HOME}
-          echo ${{root}}
+          echo ${{ github.workspace }}
           pip install pytest
           for whl in dist/*whl; do 
               pip install ${whl} --force-reinstall --no-deps
