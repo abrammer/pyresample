@@ -28,8 +28,19 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-latest]
-        python-version: [3.8]
+        os: [windows-latest, macos-latest]
+        python-version: [3.6, 3.7, 3.8, 3.9]
+        include:
+          # Using pythons inside a docker image to provide all the Linux
+          # python-versions permutations.
+          - name: manylinux 64-bit
+            os: ubuntu-latest
+            python-version: 3.8
+            docker-image: manylinux1_x86_64
+          - name: manylinux 32-bit
+            os: ubuntu-latest
+            python-version: 3.8
+            docker-image: manylinux1_i686
 
     steps:
       - uses: actions/checkout@v2
@@ -70,12 +81,12 @@ jobs:
           environment-file: continuous_integration/environment.yaml
           activate-environment: test-environment
 
-      - name: make tempdir
+      # had to do this to test the wheel and not the local code, probably a better way
+      - name: make tempdir for tests
         run: |
              mkdir ./temp
              mv pyresample/test ./temp/
              rm -rf pyresample/
-            
 
       - name: test wheels
         shell: bash -l {0} 
@@ -83,7 +94,9 @@ jobs:
           pwd
           echo ${HOME}
           echo ${{ github.workspace }}
-          for whl in ${{ github.workspace }}/dist/pyresample*whl; do 
+          python_version=${{ matrix.python-version }}
+          pyversion=${python_version//./}
+          for whl in ${{ github.workspace }}/dist/pyresample*${pyversion}*.whl; do 
               echo ${whl}
               pip install ${whl} --force-reinstall --no-deps
               pytest test/ 
