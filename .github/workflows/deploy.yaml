@@ -99,7 +99,7 @@ jobs:
           pip install pytest
           for whl in dist/*whl; do 
               pip install ${whl} --force-reinstall
-              pytest pyresample/tests/
+              pytest tests/
           done
 
       - name: Upload wheel(s) as build artifacts
