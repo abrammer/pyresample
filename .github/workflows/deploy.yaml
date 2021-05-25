@@ -80,7 +80,7 @@ jobs:
           pwd
           echo ${HOME}
           echo ${{ github.workspace }}
-          for whl in dist/*whl; do 
+          for whl in /Users/runner/work/pyresample/pyresample/dist/*whl; do 
               pip install ${whl} --force-reinstall --no-deps
               pytest ${{ github.workspace }}/pyresample/test/
           done
