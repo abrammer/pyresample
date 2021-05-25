@@ -72,7 +72,7 @@ jobs:
           activate-environment: test-environment
 
       - name: make tempdir
-        run: mkdir /temp
+        run: mkdir ./temp
 
       - name: test wheels
         shell: bash -l {0} 
@@ -82,9 +82,9 @@ jobs:
           echo ${{ github.workspace }}
           for whl in ${{ github.workspace }}/dist/pyresample*whl; do 
               pip install ${whl} --force-reinstall --no-deps
-              pytest ${{ github.workspace }}/pyresample/test/
+              pytest ${{ github.workspace }}/pyresample/test/ --rootdir=${{github.workspace}}
           done
-        working-directory: /temp
+        working-directory: ./temp
 
       - name: Upload wheel(s) as build artifacts
         uses: actions/upload-artifact@v2
