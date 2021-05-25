@@ -89,12 +89,11 @@ jobs:
              mv pyresample dont_use_this
 
       - name: test wheels
+        if matrix
         shell: bash -l {0} 
         run: |
-          pwd
-          pip install --force-reinstall --no-deps --no-index --find-links=${{ github.workspace }}/dist/ pyresample
-          pytest test/ 
-        working-directory: ./temp
+          pip install --force-reinstall --no-deps --no-index --find-links=./dist/ pyresample
+          pytest temp/test/ 
 
       - name: Upload wheel(s) as build artifacts
         uses: actions/upload-artifact@v2
