@@ -95,16 +95,17 @@ jobs:
 
 
       - name: test wheels
+        shell: bash -l {0} 
         run: |
           pwd
           echo ${HOME}
           echo ${{ github.workspace }}
-          ls
-          pip install pytest
           for whl in dist/*whl; do 
               pip install ${whl} --force-reinstall --no-deps
-              pytest pyresample/test/
+              pytest ${{ github.workspace }}/pyresample/test/
           done
+        with:
+          working-directory: /tmptests
 
       - name: Upload wheel(s) as build artifacts
         uses: actions/upload-artifact@v2
