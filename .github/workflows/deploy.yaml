@@ -43,6 +43,12 @@ jobs:
             docker-image: manylinux1_i686
 
     steps:
+      - name: test wheels
+        if:  matrix.docker-image != 'manylinux1_i686'
+        shell: bash -l {0} 
+        run: |
+            echo "this ran on this strategy"
+
       - uses: actions/checkout@v2
       - run: |
           git fetch --prune --unshallow
@@ -89,6 +95,7 @@ jobs:
              mv pyresample dont_use_this
 
       - name: test wheels
+        if:  matrix.docker-image != 'manylinux1_i686'
         shell: bash -l {0} 
         run: |
           pip install --force-reinstall --no-deps --no-index --find-links=./dist/ pyresample
