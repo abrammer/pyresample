@@ -89,7 +89,6 @@ jobs:
              mv pyresample dont_use_this
 
       - name: test wheels
-        if matrix
         shell: bash -l {0} 
         run: |
           pip install --force-reinstall --no-deps --no-index --find-links=./dist/ pyresample
