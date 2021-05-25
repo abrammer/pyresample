@@ -104,8 +104,7 @@ jobs:
               pip install ${whl} --force-reinstall --no-deps
               pytest ${{ github.workspace }}/pyresample/test/
           done
-        with:
-          working-directory: /tmptests
+        working-directory: ./temp
 
       - name: Upload wheel(s) as build artifacts
         uses: actions/upload-artifact@v2
