@@ -86,21 +86,14 @@ jobs:
         run: |
              mkdir ./temp
              mv pyresample/test ./temp/
-             rm -rf pyresample/
+             mv pyresample dont_use_this
 
       - name: test wheels
         shell: bash -l {0} 
         run: |
           pwd
-          echo ${HOME}
-          echo ${{ github.workspace }}
-          python_version=${{ matrix.python-version }}
-          pyversion=${python_version//./}
-          for whl in ${{ github.workspace }}/dist/pyresample*${pyversion}*.whl; do 
-              echo ${whl}
-              pip install ${whl} --force-reinstall --no-deps
-              pytest test/ 
-          done
+          pip install --force-reinstall --no-deps --no-index --find-links=${{ github.workspace }}/dist/ pyresample
+          pytest test/ 
         working-directory: ./temp
 
       - name: Upload wheel(s) as build artifacts
